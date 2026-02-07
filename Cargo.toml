@@ -13,7 +13,7 @@ include = [
     "src/**",
     "build.rs",
     "configs/**",
-    "payload/**",
+    "payload/*.c",
     "xtask/src/**",
     ".cargo/config.toml",
     "rust-toolchain.toml",
