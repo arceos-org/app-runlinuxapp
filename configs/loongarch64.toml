@@ -37,6 +37,8 @@ eiointc-paddr = 0x1400 # uint
 #     compatible = "syscon";
 # };
 ged-paddr = 0x100E001C # uint
+# IPI interrupt num
+ipi-irq = 12 # uint
 # MMIO ranges with format (`base_paddr`, `size`).
 mmio-ranges = [
     [0x1000_0000, 0x0000_0400],
@@ -89,8 +91,9 @@ virtio-mmio-ranges = [] # [(uint, uint)]
 [plat]
 # Stack size on bootstrapping. (256K)
 boot-stack-size = 0x40000 # uint
-# Number of CPUs.
-cpu-num = 1 # uint
+# Maximum number of CPUs. For platforms that do not support runtime CPU number
+# detection, it's also the number of CPUs to boot.
+max-cpu-num = 1  
 # Base address of the high physical memory.
 high-memory-base = 0x8000_0000 # uint
 # Kernel address space base.

@@ -33,14 +33,12 @@ fn main() {
     #[cfg(feature = "axstd")]
     {
         use alloc::string::String;
-        use alloc::sync::Arc;
-        use axhal::paging::{MappingFlags, PageSize};
-        use axmm::backend::{Backend, SharedPages};
+        use axhal::paging::MappingFlags;
         use memory_addr::va;
 
         // A new address space for user app.
-        // User space: [0x0, 0x40_0000_0000) — 256GB, below kernel space.
-        let mut uspace = axmm::AddrSpace::new_empty(va!(0x0), 0x40_0000_0000).unwrap();
+        // User space: [0x0, 0x1000_0000) — 256GB, below kernel space.
+        let mut uspace = axmm::new_user_aspace(va!(0x0), 0x40_0000_0000).unwrap();
 
         // Copy kernel page table entries so kernel code is accessible in user tasks.
         uspace
@@ -63,18 +61,14 @@ fn main() {
             ustack_top
         );
 
-        let stack_pages = Arc::new(
-            SharedPages::new(USER_STACK_SIZE, PageSize::Size4K).unwrap(),
-        );
-        uspace
-            .map(
-                ustack_vaddr,
-                USER_STACK_SIZE,
-                MappingFlags::READ | MappingFlags::WRITE | MappingFlags::USER,
-                true,
-                Backend::new_shared(ustack_vaddr, stack_pages),
-            )
-            .unwrap();
+        // Map user stack with auto-allocated pages
+        uspace.map_alloc(
+            ustack_vaddr,
+            USER_STACK_SIZE,
+            MappingFlags::READ | MappingFlags::WRITE | MappingFlags::USER,
+            true,
+        )
+        .unwrap();
 
         // Set up initial user stack with argc, argv, envp, auxv layout
         // as required by Linux ELF ABI.
