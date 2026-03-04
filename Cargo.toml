@@ -68,11 +68,4 @@ kernel-elf-parser = { version = "0.3", optional = true }
 clap = { version = "4", features = ["derive"], optional = true }
 fatfs = { version = "0.3.6", optional = true }
 
-[patch.crates-io]
-# 修复 percpu = "0.2.3" 被 yanked 的问题，使用 preview 版本
-percpu = { git = "https://github.com/arceos-org/percpu", branch = "023-pre1" }
-percpu_macros = { git = "https://github.com/arceos-org/percpu", branch = "023-pre1" }
-# 修复 scope-local 依赖的 percpu 版本问题
-scope-local = { git = "https://github.com/Starry-OS/scope-local" }
-
 [profile.release]

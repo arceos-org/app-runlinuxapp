@@ -1956,7 +1956,8 @@ dependencies = [
 [[package]]
 name = "percpu"
 version = "0.2.3-preview.1"
-source = "git+https://github.com/arceos-org/percpu?branch=023-pre1#253add172aab91ec2fd0f3fd53cabfbe0383f1ec"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c03ecfaf97c11a791d8b65e34a6353d012a735a5cbfebba34ee6668da16ce38"
 dependencies = [
  "cfg-if",
  "kernel_guard",
@@ -1968,7 +1969,8 @@ dependencies = [
 [[package]]
 name = "percpu_macros"
 version = "0.2.3-preview.1"
-source = "git+https://github.com/arceos-org/percpu?branch=023-pre1#253add172aab91ec2fd0f3fd53cabfbe0383f1ec"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6660d83b91174e6d39fae0cdf893889dcdbffda6e99664f8ee8a45fde6a6936c"
 dependencies = [
  "cfg-if",
  "proc-macro2",
@@ -2264,7 +2266,8 @@ checksum = "e6e36312fb5ddc10d08ecdc65187402baba4ac34585cb9d1b78522ae2358d890"
 [[package]]
 name = "scope-local"
 version = "0.1.2"
-source = "git+https://github.com/Starry-OS/scope-local#96d50f87014093de442b41a4dd7df1dd5fd637ce"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c80f3dd0611957c9384d8e5b076236a265e873b41dcae7ccc5d1ba4fe58e32ae"
 dependencies = [
  "percpu",
  "spin 0.10.0",
