@@ -2,7 +2,7 @@
 //!
 //! Uses manual ELF parsing (no external `elf` crate) and `axfs` for file I/O.
 
-use alloc::vec::Vec;
+use alloc::{vec, vec::Vec};
 use axfs::ROOT_FS_CONTEXT;
 use axhal::paging::MappingFlags;
 use axmm::AddrSpace;
@@ -77,8 +77,11 @@ pub fn load_user_app(fname: &str, uspace: &mut AddrSpace) -> Result<usize, axio:
 
     // Validate ELF magic
     if ehdr.e_ident[..4] != ELF_MAGIC {
-        ax_println!("Error: ELF magic mismatch: got {:02x?}, expected {:02x?}", 
-            &ehdr.e_ident[..4], ELF_MAGIC);
+        ax_println!(
+            "Error: ELF magic mismatch: got {:02x?}, expected {:02x?}",
+            &ehdr.e_ident[..4],
+            ELF_MAGIC
+        );
         return Err(axio::Error::InvalidData);
     }
 
@@ -86,7 +89,12 @@ pub fn load_user_app(fname: &str, uspace: &mut AddrSpace) -> Result<usize, axio:
     let phnum = ehdr.e_phnum as usize;
     let phoff = ehdr.e_phoff as usize;
 
-    ax_println!("ELF: entry={:#x}, phnum={}, phoff={:#x}", entry, phnum, phoff);
+    ax_println!(
+        "ELF: entry={:#x}, phnum={}, phoff={:#x}",
+        entry,
+        phnum,
+        phoff
+    );
 
     // Read program headers
     let phdr_total = phnum * PHDR_SIZE;
@@ -98,9 +106,8 @@ pub fn load_user_app(fname: &str, uspace: &mut AddrSpace) -> Result<usize, axio:
 
     // Process PT_LOAD segments
     for i in 0..phnum {
-        let phdr: Elf64Phdr = unsafe {
-            core::ptr::read_unaligned(phdr_buf.as_ptr().add(i * PHDR_SIZE) as *const _)
-        };
+        let phdr: Elf64Phdr =
+            unsafe { core::ptr::read_unaligned(phdr_buf.as_ptr().add(i * PHDR_SIZE) as *const _) };
 
         if phdr.p_type != PT_LOAD {
             continue;
@@ -122,16 +129,17 @@ pub fn load_user_app(fname: &str, uspace: &mut AddrSpace) -> Result<usize, axio:
         ax_println!("Mapping {:#x} - {:#x}", vaddr, vaddr_end);
 
         // Map pages with auto-allocated physical pages
-        uspace.map_alloc(
-            vaddr,
-            map_size,
-            MappingFlags::READ
-                | MappingFlags::WRITE
-                | MappingFlags::EXECUTE
-                | MappingFlags::USER,
-            true,
-        )
-        .map_err(|_| axio::Error::NoMemory)?;
+        uspace
+            .map_alloc(
+                vaddr,
+                map_size,
+                MappingFlags::READ
+                    | MappingFlags::WRITE
+                    | MappingFlags::EXECUTE
+                    | MappingFlags::USER,
+                true,
+            )
+            .map_err(|_| axio::Error::NoMemory)?;
 
         // Read segment data from file and write to user space
         let p_offset = phdr.p_offset as usize;
@@ -144,8 +152,7 @@ pub fn load_user_app(fname: &str, uspace: &mut AddrSpace) -> Result<usize, axio:
         }
 
         // Create data buffer, copy from file, BSS region stays zero-filled
-        let mut data = Vec::with_capacity(p_memsz);
-        data.resize(p_memsz, 0);
+        let mut data = vec![0; p_memsz];
         if p_filesz > 0 && p_offset + p_filesz <= file_buf.len() {
             data[..p_filesz].copy_from_slice(&file_buf[p_offset..p_offset + p_filesz]);
         }

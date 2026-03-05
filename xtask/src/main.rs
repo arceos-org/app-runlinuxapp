@@ -5,7 +5,10 @@ use std::process::{self, Command};
 
 /// ArceOS run-linux-app multi-architecture build & run tool
 #[derive(Parser)]
-#[command(name = "xtask", about = "Build and run arceos-runlinuxapp on different architectures")]
+#[command(
+    name = "xtask",
+    about = "Build and run arceos-runlinuxapp on different architectures"
+)]
 struct Cli {
     #[command(subcommand)]
     command: Cmd,

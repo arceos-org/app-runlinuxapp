@@ -62,13 +62,14 @@ fn main() {
         );
 
         // Map user stack with auto-allocated pages
-        uspace.map_alloc(
-            ustack_vaddr,
-            USER_STACK_SIZE,
-            MappingFlags::READ | MappingFlags::WRITE | MappingFlags::USER,
-            true,
-        )
-        .unwrap();
+        uspace
+            .map_alloc(
+                ustack_vaddr,
+                USER_STACK_SIZE,
+                MappingFlags::READ | MappingFlags::WRITE | MappingFlags::USER,
+                true,
+            )
+            .unwrap();
 
         // Set up initial user stack with argc, argv, envp, auxv layout
         // as required by Linux ELF ABI.

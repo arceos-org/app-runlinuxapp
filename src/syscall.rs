@@ -46,7 +46,11 @@ struct IoVec {
 // ---- Architecture-specific register access ----
 
 /// Get the syscall number from the user context.
-#[cfg(any(target_arch = "riscv64", target_arch = "riscv32", target_arch = "loongarch64"))]
+#[cfg(any(
+    target_arch = "riscv64",
+    target_arch = "riscv32",
+    target_arch = "loongarch64"
+))]
 fn get_syscall_num(uctx: &UserContext) -> usize {
     uctx.regs.a7
 }
