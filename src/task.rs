@@ -28,11 +28,7 @@ struct AlignedUserContext(UserContext);
 ///
 /// The task runs a loop: enter user mode → receive trap → dispatch
 /// (syscall or page fault) → re-enter user mode.
-pub fn spawn_user_task(
-    uspace: AddrSpace,
-    entry: usize,
-    ustack_pointer: VirtAddr,
-) -> AxTaskRef {
+pub fn spawn_user_task(uspace: AddrSpace, entry: usize, ustack_pointer: VirtAddr) -> AxTaskRef {
     let page_table_root = uspace.page_table_root();
 
     let mut task = TaskInner::new(
@@ -40,8 +36,7 @@ pub fn spawn_user_task(
             // Keep uspace alive for the lifetime of this task.
             let _uspace = uspace;
 
-            let mut aligned_uctx =
-                AlignedUserContext(UserContext::new(entry, ustack_pointer, 0));
+            let mut aligned_uctx = AlignedUserContext(UserContext::new(entry, ustack_pointer, 0));
 
             // Enable FP/SIMD access from user mode (EL0) on aarch64.
             // Musl-compiled binaries use FP instructions even for simple programs.
